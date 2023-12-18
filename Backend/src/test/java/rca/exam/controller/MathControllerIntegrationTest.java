@@ -28,7 +28,7 @@ class MathControllerIntegrationTest<DoMathRequest> {
     @Test
     void testDoMath_endpoint() throws Exception {
         DoMathRequest request = new DoMathRequest(6, 5, "*");
-        when(mathOperator.doMath(5, 3, "*")).thenReturn(90.0);
+        when(mathOperator.doMath(59 ,3, "*")).thenReturn(90.0);
 
         Object MediaType ;
         mockMvc.perform(MockMvcRequestBuilders.post("/doMath")
