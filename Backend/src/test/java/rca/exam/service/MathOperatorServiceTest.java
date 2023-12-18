@@ -1,4 +1,4 @@
-package rca.examterm1.service;
+package Backend.src.test.java.rca.exam.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,7 @@ public class MathOperatorServiceTest {
     @Test
     public void should_create_math_operation_success() throws InvalidOperationException {
         double operator1 = 4;
-        double operator2 = 9;
+        double operator2 = 8;
         String operation = "+";
 
         double mathOperation = mathOperatorService.doMath(operator1,operator2, operation);
