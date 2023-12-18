@@ -1,33 +1,58 @@
-package Backend.src.test.java.rca.exam.controller;
-
-import org.example.dto.DoMathRequest;
-import org.example.service.MathOperator;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.boot.web.server.LocalServerPort;
 
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class MathControllerEndToEndTest {
+public class MathApplicationE2ETest {
 
-    @Autowired
-    private WebTestClient webTestClient;
+    @LocalServerPort
+    private int port;
 
-    @MockBean
-    private MathOperator mathOperator;
+    private WebDriver driver;
+
+    @BeforeEach
+    public void setUp() {
+        // Set up WebDriver (assuming you have ChromeDriver installed)
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+        driver = new ChromeDriver();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        // Close the browser after each test
+        if (driver != null) {
+            driver.quit();
+        }
+    }
 
     @Test
-    void testDoMath_endpoint() throws Exception {
-        DoMathRequest request = new DoMathRequest(5, 4, "*");
-        when(mathOperator.doMath(5, 4, "*")).thenReturn(20.0);
+    public void testDoMathOperation_E2E() {
+        // Given
+        driver.get("http://localhost:" + port + "/");  // Assuming your application is running at the root context
 
-        webTestClient.post()
-                .uri("/doMath")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
-                .exchange()
+        // Find input fields and submit button
+        WebElement operand1Input = driver.findElement(By.id("operand1"));
+        WebElement operand2Input = driver.findElement(By.id("operand2"));
+        WebElement operationInput = driver.findElement(By.id("operation"));
+        WebElement calculateButton = driver.findElement(By.id("calculateButton"));
+
+        // When
+        operand1Input.sendKeys("2");
+        operand2Input.sendKeys("5");
+        operationInput.sendKeys("+");
+        calculateButton.click();
+
+        // Then
+        WebElement resultElement = driver.findElement(By.id("result"));
+        String resultText = resultElement.getText();
+        assertEquals("7.0", resultText);
     }
+}
