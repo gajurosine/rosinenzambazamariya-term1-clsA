@@ -6,5 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ApiResponse {
+
+
     private double calcResponse;
 }
